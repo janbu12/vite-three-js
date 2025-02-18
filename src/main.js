@@ -26,7 +26,7 @@ loader.setDRACOLoader(dracoLoader);
 let faceModel = null;
 
 loader.load(
-  '../public/model/stylized_face.glb',
+  '/model/stylized_face.glb',
   function (gltf) {
     faceModel = gltf.scene;
     faceModel.position.set(0, -0.8, 0);

@@ -3,6 +3,10 @@ html {
   font-family: "Reddit Sans", serif;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 
 .container {
   position: fixed;
