@@ -4,11 +4,39 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <title>Vite + Three JS App</title>
   </head>
   <body>
-    <h1 class="title">This is Vite + Three JS</h1>
-    <canvas id="canvas"></canvas>
+    <div class="container">
+      <canvas id="canvas"></canvas>
+    </div>
+  
+    <!-- Tambahkan banyak section untuk scroll -->
+    <section class="section">
+      <div class="content">
+        <h2>About Me</h2>
+        <p>Lorem ipsum dolor sit amet...</p>
+      </div>
+    </section>
+  
+    <section class="section">
+      <div class="content">
+        <h2>Projects</h2>
+        <p>Some amazing projects...</p>
+      </div>
+    </section>
+  
+    <section class="section">
+      <div>
+        <h2>Contact</h2>
+        <p>Contact me at...</p>
+      </div>
+    </section>
+  
     <script type="module" src="/src/main.js"></script>
   </body>
+  
 </html>

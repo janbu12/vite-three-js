@@ -1,7 +1,19 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+html {
+  scroll-behavior: smooth;
+  font-family: "Reddit Sans", serif;
+}
+
+
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .title {
@@ -11,10 +23,43 @@
   transform: translate(-50%); 
   margin-top: 2vh;
   position: absolute;
+  z-index: 100;
 }
 
 canvas {
   display: block;
   width: 100%;
   height: 100vh;
+  pointer-events: none;
+}
+
+.section {
+  height: 100vh;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  color: white;
+  font-size: 2em;
+  /* background: rgba(255, 255, 255, 0.1); */
+  position: relative;
+  z-index: 10;
+}
+
+.section:nth-child(3){
+  justify-content: flex-end;
+  text-align: end;
+}
+
+h2 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
 }

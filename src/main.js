@@ -1,11 +1,12 @@
 import './style.css';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Ambil elemen canvas
+gsap.registerPlugin(ScrollTrigger);
+
 const canvas = document.getElementById('canvas');
 
 // 1. Scene
@@ -18,23 +19,53 @@ camera.position.z = 5;
 
 // 3. Object
 const dracoLoader = new DRACOLoader();
-			dracoLoader.setDecoderPath( 'jsm/libs/draco/gltf/' );
+dracoLoader.setDecoderPath('jsm/libs/draco/gltf/');
 
 const loader = new GLTFLoader();
-loader.setDRACOLoader( dracoLoader );
-loader.load( '../public/model/stylized_face.glb', function ( gltf ) {
+loader.setDRACOLoader(dracoLoader);
+let faceModel = null;
 
-      const model = gltf.scene;
-      model.position.set( 0, -0.8, 0 );
-      model.scale.set( 0.3, 0.3, 0.3 );
-      scene.add( model );
-    }, undefined, function ( e ) {
+loader.load(
+  '../public/model/stylized_face.glb',
+  function (gltf) {
+    faceModel = gltf.scene;
+    faceModel.position.set(0, -0.8, 0);
+    faceModel.scale.set(0.3, 0.3, 0.3);
+    scene.add(faceModel);
 
-      console.error( e );
+    // Animasi rotasi berdasarkan scroll
+    // gsap.to(faceModel.rotation, {
+    //   y: Math.PI,
+    //   scrollTrigger: {
+    //     trigger: "body",
+    //     start: "top top",
+    //     end: "bottom bottom",
+    //     scrub: 1, // Animasi mengikuti scroll
+    //   }
+    // });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+      },
+    });
+    
+    tl.to(faceModel.position, { x: -1.5, ease: "linear" }) // Geser ke kiri di content 2
+      .to(faceModel.rotation, { y: Math.PI / 2, ease: "power2.inOut" }, "<") // Rotasi bersamaan
+      .to(faceModel.position, { x: 1.5, ease: "linear" }) // Geser ke kanan di content 3
+      .to(faceModel.rotation, { y: - Math.PI / 2, ease: "power2.inOut" }, "<");
 
-    } );
+    
+  },
+  undefined,
+  function (e) {
+    console.error(e);
+  }
+);
+
 // 4. Light
-
 const ambientLight = new THREE.AmbientLight("#FFFFFF", 0.5);
 scene.add(ambientLight);
 
@@ -45,39 +76,17 @@ scene.add(directionalLight);
 // 5. Renderer
 const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setPixelRatio(window.devicePixelRatio);
-function resizeRendererToDisplaySize() {
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-  // Perbarui ukuran renderer jika ukuran canvas berubah
-  if (canvas.width !== width || canvas.height !== height) {
-    renderer.setSize(width, height, false); // false untuk menghindari penghapusan konten canvas
-    camera.aspect = width / height; // Perbarui aspek rasio kamera
-    camera.updateProjectionMatrix(); // Terapkan perubahan pada kamera
-  }
-}
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+});
 
-// 6. Control
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.05;
-controls.enableZoom = false;
-controls.enablePan = true;
-
-controls.minPolarAngle = Math.PI / 2;
-controls.maxPolarAngle = Math.PI / 2;
-
-// 7. Animation
+// 6. Animation Loop
 function animate() {
   requestAnimationFrame(animate);
-  resizeRendererToDisplaySize();
-
-  controls.update(); // Perbarui kontrol
-  renderer.render(scene, camera); // Render scene
+  renderer.render(scene, camera);
 }
 animate();
-
-// 8. Event Listener untuk Resize
-window.addEventListener('resize', () => {
-  resizeRendererToDisplaySize();
-});
